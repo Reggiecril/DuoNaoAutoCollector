@@ -10,6 +10,8 @@ class ChromeDriver:
         :param wait_sec: 最大等待时间，单位：秒
         """
         chrome_options = Options()
+        prefs = {'profile.managed_default_content_settings.images': 2}
+        chrome_options.add_experimental_option('prefs', prefs)
         # chrome_options.add_argument('--no-sandbox')
         # chrome_options.add_argument('--headless')
         # chrome_options.add_argument('--disable-gpu')
