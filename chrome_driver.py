@@ -1,6 +1,8 @@
 from selenium import webdriver
 
 from selenium.webdriver.chrome.options import Options
+
+
 class ChromeDriver:
     def __init__(self, window_w=None, window_h=None, wait_sec=None):
         """
@@ -22,4 +24,3 @@ class ChromeDriver:
         # driver.set_window_size(window_w, window_h)
         # driver.implicitly_wait(wait_sec)
         self.driver = driver
-
