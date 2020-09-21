@@ -44,6 +44,9 @@ class MovieDetail:
         for i in count:
             print(i.get_text().strip(), ' ')
 
+        brief = source.select(
+            'body > div.root-container > app-root > app-index > div.border-warp > div.container > div.page-container > div.mb-5 > div.ng-star-inserted > app-summary > div.summary')
+        print(brief.get_text())
     def __del__(self):
         self.driver.close()
 
