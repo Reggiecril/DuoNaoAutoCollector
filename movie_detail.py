@@ -15,7 +15,7 @@ class MovieDetail:
         # 初始化Chrome
         self.driver = ChromeDriver().driver
         self.driver.set_page_load_timeout(10)
-        f = open('movie_detail.txt', 'w+')
+        f = open('movie_detail.json', 'w+')
         f.close()
 
     def start_crawl(self):
@@ -24,8 +24,9 @@ class MovieDetail:
             for j in i:
                 self.get_movie_detail(j['id'], j['hot_count'])
                 print(j['id'], j['hot_count'])
+        self.save_as_json()
 
-    def get_movie_detail(self, url, hot_count=0, file_name='movie_detail.txt'):
+    def get_movie_detail(self, url, hot_count=0, file_name='movie_detail.json'):
         try:
             self.driver.get('https://www.ifvod.tv/detaili?id=' + url)
         except TimeoutException:
@@ -81,7 +82,14 @@ class MovieDetail:
                 url_list.append(json.loads(line))
         return url_list
 
-
+    def save_as_json(self):
+        l = list()
+        with open('movie_detail.json', 'r') as file:
+            text_lines = file.readlines()
+            for line in text_lines:
+                l.append(json.loads(line))
+        with open('movie_detail.json', 'w+') as f:
+            f.write(json.dumps(l, ensure_ascii=False))
 if __name__ == '__main__':
     movie = MovieList(
         'https://www.ifvod.tv/list?keyword=&star=&page=1&pageSize=30&cid=0,1,3&year=-1&language=-1&region=-1&status=-1&orderBy=2&desc=true')

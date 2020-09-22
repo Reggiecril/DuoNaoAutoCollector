@@ -60,3 +60,6 @@ class MovieList:
         else:
             next_page.click()
             self.get_movie_list()
+
+    def __del__(self):
+        self.driver.close()
