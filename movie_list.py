@@ -13,15 +13,12 @@ class MovieList:
     def __init__(self, url):
         # 初始化Chrome
         self.driver = ChromeDriver().driver
-        self.driver.set_page_load_timeout(10)
-        self.driver.maximize_window()
+        # self.driver.set_page_load_timeout(10)
+        # self.driver.maximize_window()
         try:
             self.driver.get(url)
             f = open('url.txt', 'w+')
             f.close()
-            movie = self.driver.find_element_by_css_selector(
-                'body > div.root-container > app-root > app-search > div > div.page-container.list > div.search-top.ng-star-inserted > div:nth-child(1) > div > app-search-filter:nth-child(1) > div > div.d-flex > div.filter-button.mr-2.mb-1.ng-star-inserted')
-            movie.click()
         except TimeoutException:
             print(u'页面加载超过设定时间，超时')
             # 当页面加载时间超过设定时间，
@@ -33,12 +30,15 @@ class MovieList:
         movie_url_list = source.select(
             'app-root > app-search > div > div.page-container.list > div.inner.d-flex.flex-wrap > div > div.search-results.d-flex.flex-wrap.justify-content-between.ng-star-inserted > app-video-teaser > div > a ')
         with open('url.txt', 'a+') as file:
-            map = dict()
+            url_list = list()
             for i in movie_url_list:
-                id = i.get('href').split("=")[1]
-                map[id] = count
+                map = dict()
+                map['id'] = i.get('href').split("=")[1]
+                map['hot_count'] = count
+                url_list.append(map)
                 count += 1
-            file.write(json.dumps(map) + '\n')
+            file.write(json.dumps(url_list, ensure_ascii=False) + '\n')
+            print(json.dumps(url_list))
         next_page = self.driver.find_elements_by_css_selector(
             'body > div.root-container > app-root > app-search > div > div.page-container.list > div.inner.d-flex.flex-wrap > div > div.d-flex.mb-5.page-controls.align-items-center.justify-content-center.ng-star-inserted > app-pager > ul > li')[
             -2]

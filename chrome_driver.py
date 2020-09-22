@@ -4,7 +4,7 @@ from selenium.webdriver.chrome.options import Options
 
 
 class ChromeDriver:
-    def __init__(self, window_w=None, window_h=None, wait_sec=None):
+    def __init__(self):
         """
         构建chrome driver
         :param window_w: 设置窗口宽度
@@ -14,13 +14,11 @@ class ChromeDriver:
         chrome_options = Options()
         prefs = {'profile.managed_default_content_settings.images': 2}
         chrome_options.add_experimental_option('prefs', prefs)
-        # chrome_options.add_argument('--no-sandbox')
-        # chrome_options.add_argument('--headless')
-        # chrome_options.add_argument('--disable-gpu')
-        # chrome_options.add_argument('--disable-dev-shm-usage')
-        # chrome_options.add_experimental_option('excludeSwitches', ['enable-automation'])  # 以开发者模式
+        chrome_options.add_argument('--no-sandbox')
+        chrome_options.add_argument('--headless')
+        chrome_options.add_argument('--disable-gpu')
+        chrome_options.add_argument('--disable-dev-shm-usage')
+        chrome_options.add_experimental_option('excludeSwitches', ['enable-automation'])  # 以开发者模式
         driver = webdriver.Chrome(options=chrome_options)
         #
-        # driver.set_window_size(window_w, window_h)
-        # driver.implicitly_wait(wait_sec)
         self.driver = driver
