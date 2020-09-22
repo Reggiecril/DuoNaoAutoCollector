@@ -7,6 +7,7 @@ from bs4 import BeautifulSoup
 from selenium.common.exceptions import TimeoutException
 
 from chrome_driver import ChromeDriver
+from movie_list import MovieList
 
 
 class MovieDetail:
@@ -82,5 +83,8 @@ class MovieDetail:
 
 
 if __name__ == '__main__':
+    movie = MovieList(
+        'https://www.ifvod.tv/list?keyword=&star=&page=1&pageSize=30&cid=0,1,3&year=-1&language=-1&region=-1&status=-1&orderBy=2&desc=true')
+    movie.get_movie_list()
     detail = MovieDetail()
     detail.start_crawl()

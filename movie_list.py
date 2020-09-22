@@ -60,19 +60,3 @@ class MovieList:
         else:
             next_page.click()
             self.get_movie_list()
-
-
-if __name__ == '__main__':
-    movie = MovieList(
-        'https://www.ifvod.tv/list?keyword=&star=&page=1&pageSize=30&cid=0,1,3&year=-1&language=-1&region=-1&status=-1&orderBy=2&desc=true')
-    movie.get_movie_list()
-    # movie = driver.find_element_by_css_selector(
-    #     'body > div.root-container > app-root > app-search > div > div.page-container.list > div.search-top.ng-star-inserted > div:nth-child(1) > div > app-search-filter:nth-child(1) > div > div.d-flex > div.filter-button.mr-2.mb-1.ng-star-inserted')
-    # movie.click()
-    # time.sleep(2)
-    # # source = BeautifulSoup(driver.page_source, "lxml")
-    # text=driver.find_elements_by_css_selector('body > div.root-container > app-root > app-search > div > div.page-container.list > div.inner.d-flex.flex-wrap > div > div.d-flex.mb-5.page-controls.align-items-center.justify-content-center.ng-star-inserted > app-pager > ul > li')
-    #
-    # if text[-2].get_attribute('class') == 'disabled':
-    #     print('yes')
-    # driver.close()
