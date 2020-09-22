@@ -25,10 +25,16 @@ class MovieList:
             # 通过执行Javascript来stop加载，然后继续执行后续动作
 
     def get_movie_list(self, count=1):
-        time.sleep(3)
-        source = BeautifulSoup(self.driver.page_source, "lxml")
-        movie_url_list = source.select(
-            'app-root > app-search > div > div.page-container.list > div.inner.d-flex.flex-wrap > div > div.search-results.d-flex.flex-wrap.justify-content-between.ng-star-inserted > app-video-teaser > div > a ')
+        movie_url_list = list()
+        timer = 0
+        while len(movie_url_list) <= 0 or movie_url_list is None:
+            source = BeautifulSoup(self.driver.page_source, "lxml")
+            time.sleep(0.5)
+            movie_url_list = source.select(
+                'app-root > app-search > div > div.page-container.list > div.inner.d-flex.flex-wrap > div > div.search-results.d-flex.flex-wrap.justify-content-between.ng-star-inserted > app-video-teaser > div > a ')
+            timer += 1
+            if timer % 20 == 0:
+                self.driver.execute_script("location.reload()")
         with open('url.txt', 'a+') as file:
             url_list = list()
             for i in movie_url_list:
