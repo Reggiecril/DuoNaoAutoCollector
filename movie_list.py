@@ -53,7 +53,10 @@ class MovieList:
             sys.exit(0)
         else:
             next_page.click()
-            self.get_movie_list(count)
+            try:
+                self.get_movie_list(count)
+            except Exception:
+                self.driver.execute_script("location.reload()")
 
     def next_page(self, url):
         self.driver.get(url)
