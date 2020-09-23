@@ -9,6 +9,7 @@ import requests
 from bs4 import BeautifulSoup
 
 from chrome_driver import ChromeDriver
+from movie_list import MovieList
 
 
 class MovieDetail:
@@ -137,9 +138,9 @@ class MovieDetail:
 if __name__ == '__main__':
     driver = ChromeDriver().get_driver()
     try:
-        # movie = MovieList(driver,
-        #                   'https://www.ifvod.tv/list?keyword=&star=&page=1&pageSize=30&cid=0,1,3&year=-1&language=-1&region=-1&status=-1&orderBy=2&desc=true')
-        # movie.get_movie_list()
+        movie = MovieList(driver,
+                          'https://www.ifvod.tv/list?keyword=&star=&page=1&pageSize=30&cid=0,1,3&year=-1&language=-1&region=-1&status=-1&orderBy=2&desc=true')
+        movie.get_movie_list()
         detail = MovieDetail(driver)
         detail.start_crawl()
     except Exception:
