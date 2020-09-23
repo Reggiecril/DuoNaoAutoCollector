@@ -11,7 +11,7 @@ class MovieList:
     def __init__(self, driver, url):
         # 初始化Chrome
         self.driver = driver
-        # self.driver.set_page_load_timeout(10)
+        self.driver.set_page_load_timeout(10)
         # self.driver.maximize_window()
         try:
             self.driver.get(url)
@@ -52,7 +52,12 @@ class MovieList:
             self.driver.close()
             sys.exit(0)
         else:
-            next_page.click()
+            try:
+                next_page.click()
+            except TimeoutException:
+                print('超时')
+                self.driver.execute_script("location.reload()")
+                self.get_movie_list(count)
             try:
                 self.get_movie_list(count)
             except Exception:
