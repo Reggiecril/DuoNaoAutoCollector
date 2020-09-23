@@ -86,9 +86,32 @@ class MovieDetail:
         with open('movie_detail.json', 'r') as file:
             text_lines = file.readlines()
             for line in text_lines:
-                l.append(json.loads(line))
+                l.append(self.convert_json(line))
         with open('movie_detail.json', 'w+') as f:
             f.write(json.dumps(l, ensure_ascii=False))
+
+    def convert_json(self, line):
+        static_map = dict()
+        static_map["语言"] = "language"
+        static_map["年份"] = "publishYear"
+        static_map["图片"] = "image"
+        static_map["简介"] = "brief"
+        static_map["评论"] = "review"
+        static_map["添加"] = "addDate"
+        static_map["踩"] = "unlike"
+        static_map["区域"] = "region"
+        static_map["热度排名"] = "hotRank"
+        static_map["主演"] = "actor"
+        static_map["频道"] = "channel"
+        static_map["电影名"] = "name"
+        static_map["导演"] = "director"
+        static_map["赞"] = "like"
+        static_map["分类"] = "category"
+        map = json.loads(line)
+        return_map = dict()
+        for i in map:
+            return_map[static_map[i]] = map[i]
+        return return_map
 
     def save_image(self, image_url, name):
         if not image_url:
