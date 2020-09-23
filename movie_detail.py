@@ -4,10 +4,8 @@ import re
 import time
 
 from bs4 import BeautifulSoup
-from selenium.common.exceptions import TimeoutException
 
 from chrome_driver import ChromeDriver
-from movie_list import MovieList
 
 
 class MovieDetail:
@@ -27,15 +25,13 @@ class MovieDetail:
         self.save_as_json()
 
     def get_movie_detail(self, url, hot_count=0, file_name='movie_detail.json'):
-        try:
-            self.driver.get('https://www.ifvod.tv/detaili?id=' + url)
-        except TimeoutException:
-            print(u'页面加载超过设定时间，超时')
-            # 当页面加载时间超过设定时间，
-            # 通过执行Javascript来stop加载，然后继续执行后续动作
-
-        map = self.get_movie_info(hot_count)
-        if map is not None:
+        map = dict()
+        while len(map) <= 0 or map is None:
+            try:
+                self.driver.get('https://www.ifvod.tv/detaili?id=' + url)
+                map = self.get_movie_info(hot_count)
+            except Exception:
+                continue
             with open(file_name, 'a+') as file:
                 file.write(json.dumps(map, ensure_ascii=False) + '\n')
                 print(json.dumps(map, ensure_ascii=False))
@@ -91,8 +87,8 @@ class MovieDetail:
         with open('movie_detail.json', 'w+') as f:
             f.write(json.dumps(l, ensure_ascii=False))
 if __name__ == '__main__':
-    movie = MovieList(
-        'https://www.ifvod.tv/list?keyword=&star=&page=1&pageSize=30&cid=0,1,3&year=-1&language=-1&region=-1&status=-1&orderBy=2&desc=true')
-    movie.get_movie_list()
+    # movie = MovieList(
+    #     'https://www.ifvod.tv/list?keyword=&star=&page=1&pageSize=30&cid=0,1,3&year=-1&language=-1&region=-1&status=-1&orderBy=2&desc=true')
+    # movie.get_movie_list()
     detail = MovieDetail()
     detail.start_crawl()
