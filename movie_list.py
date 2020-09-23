@@ -27,12 +27,14 @@ class MovieList:
         timer = 0
         while len(movie_url_list) <= 0 or movie_url_list is None:
             source = BeautifulSoup(self.driver.page_source, "lxml")
-            time.sleep(0.5)
+            time.sleep(0.5 + timer / 10)
             movie_url_list = source.select(
                 'app-root > app-search > div > div.page-container.list > div.inner.d-flex.flex-wrap > div > div.search-results.d-flex.flex-wrap.justify-content-between.ng-star-inserted > app-video-teaser > div > a ')
             timer += 1
             if timer % 20 == 0:
                 self.driver.execute_script("location.reload()")
+            if timer >= 100:
+                return
         with open('url.txt', 'a+') as file:
             url_list = list()
             for i in movie_url_list:

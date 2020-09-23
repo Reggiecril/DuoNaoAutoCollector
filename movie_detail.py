@@ -142,7 +142,7 @@ if __name__ == '__main__':
         movie = MovieList(driver,
                           'https://www.ifvod.tv/list?keyword=&star=&page=1&pageSize=30&cid=0,1,3&year=-1&language=-1&region=-1&status=-1&orderBy=2&desc=true')
         movie.get_movie_list()
-        detail = MovieDetail()
+        detail = MovieDetail(driver)
         detail.start_crawl()
     except Exception:
         print("except")
