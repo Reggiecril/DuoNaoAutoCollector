@@ -9,12 +9,13 @@ import requests
 from bs4 import BeautifulSoup
 
 from chrome_driver import ChromeDriver
+from movie_list import MovieList
 
 
 class MovieDetail:
-    def __init__(self):
+    def __init__(self, driver):
         # 初始化Chrome
-        self.driver = ChromeDriver().driver
+        self.driver = driver
         # self.driver.set_page_load_timeout(10)
         f = open('movie_detail.json', 'w+')
         f.close()
@@ -71,9 +72,6 @@ class MovieDetail:
         map['图片'] = imager_name
         self.save_image(source.find('app-gg-block').find('img').get('src'), imager_name)
         return map
-
-    def __del__(self):
-        self.driver.close()
 
     def load_file(self):
         url_list = list()
@@ -139,8 +137,14 @@ class MovieDetail:
         else:
             return True
 if __name__ == '__main__':
-    # movie = MovieList(
-    #     'https://www.ifvod.tv/list?keyword=&star=&page=1&pageSize=30&cid=0,1,3&year=-1&language=-1&region=-1&status=-1&orderBy=2&desc=true')
-    # movie.get_movie_list()
-    detail = MovieDetail()
-    detail.start_crawl()
+    driver = ChromeDriver().driver
+    try:
+        movie = MovieList(driver,
+                          'https://www.ifvod.tv/list?keyword=&star=&page=1&pageSize=30&cid=0,1,3&year=-1&language=-1&region=-1&status=-1&orderBy=2&desc=true')
+        movie.get_movie_list()
+        detail = MovieDetail()
+        detail.start_crawl()
+    except Exception:
+        print("except")
+    finally:
+        driver.close()

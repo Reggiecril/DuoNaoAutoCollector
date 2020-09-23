@@ -6,13 +6,11 @@ import time
 from bs4 import BeautifulSoup
 from selenium.common.exceptions import TimeoutException
 
-from chrome_driver import ChromeDriver
-
 
 class MovieList:
-    def __init__(self, url):
+    def __init__(self, driver, url):
         # 初始化Chrome
-        self.driver = ChromeDriver().driver
+        self.driver = driver
         # self.driver.set_page_load_timeout(10)
         # self.driver.maximize_window()
         try:
@@ -72,5 +70,3 @@ class MovieList:
             next_page.click()
             self.get_movie_list()
 
-    def __del__(self):
-        self.driver.close()
