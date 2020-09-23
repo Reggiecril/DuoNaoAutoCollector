@@ -57,6 +57,8 @@ class MovieList:
                 self.get_movie_list(count)
             except Exception:
                 self.driver.execute_script("location.reload()")
+                self.get_movie_list(count)
+
 
     def next_page(self, url):
         self.driver.get(url)
