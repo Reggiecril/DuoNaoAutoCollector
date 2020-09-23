@@ -1,12 +1,14 @@
 # coding:utf-8
 import json
+import os
 import re
 import time
+import uuid
 
+import requests
 from bs4 import BeautifulSoup
 
 from chrome_driver import ChromeDriver
-from movie_list import MovieList
 
 
 class MovieDetail:
@@ -65,7 +67,9 @@ class MovieDetail:
         brief = source.find('app-summary')
         map['简介'] = brief.get_text()
         map['热度排名'] = hot_count
-        map['图片'] = source.find('app-gg-block').find('img').get('src')
+        imager_name = str(uuid.uuid1())
+        map['图片'] = imager_name
+        self.save_image(source.find('app-gg-block').find('img').get('src'), imager_name)
         return map
 
     def __del__(self):
@@ -87,9 +91,56 @@ class MovieDetail:
                 l.append(json.loads(line))
         with open('movie_detail.json', 'w+') as f:
             f.write(json.dumps(l, ensure_ascii=False))
+
+    def save_image(self, image_url, name):
+        if not image_url:
+            return False
+        size = 0
+        number = 0
+        while size == 0:
+            try:
+                proxy = {'http': 'http://officepx.datayes.com:1080/', 'https': 'http://officepx.datayes.com:1080/'}
+                img_file = requests.get(image_url, proxies=proxy)
+            except requests.exceptions.RequestException as e:
+                raise e
+            file_path = self.image_path(name)
+            # 保存
+            with open(file_path, 'wb') as f:
+                f.write(img_file.content)
+            # 判断是否正确保存图片
+            size = os.path.getsize(file_path)
+            if size == 0:
+                os.remove(file_path)
+            # 如果该图片获取超过十次则跳过
+            number += 1
+            if number >= 10:
+                break
+        return (file_path if (size > 0) else False)
+
+    '''
+    图片保存的路径
+    '''
+
+    def image_path(self, image_name):
+        # 文件夹
+        file_dir = 'images/'
+        if not os.path.exists(file_dir):
+            os.makedirs(file_dir)
+        # 文件名
+        file_name = str(time.time())
+        # 文件后缀
+        suffix = '.jpeg'
+        return file_dir + image_name + suffix
+
+    # 检查是否为图片类型
+    def check_image(self, content_type):
+        if 'image' in content_type:
+            return False
+        else:
+            return True
 if __name__ == '__main__':
-    movie = MovieList(
-        'https://www.ifvod.tv/list?keyword=&star=&page=1&pageSize=30&cid=0,1,3&year=-1&language=-1&region=-1&status=-1&orderBy=2&desc=true')
-    movie.get_movie_list()
+    # movie = MovieList(
+    #     'https://www.ifvod.tv/list?keyword=&star=&page=1&pageSize=30&cid=0,1,3&year=-1&language=-1&region=-1&status=-1&orderBy=2&desc=true')
+    # movie.get_movie_list()
     detail = MovieDetail()
     detail.start_crawl()
