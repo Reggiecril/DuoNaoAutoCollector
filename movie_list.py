@@ -8,11 +8,11 @@ from selenium.common.exceptions import TimeoutException
 
 
 class MovieList:
-    def __init__(self, driver, url):
+    def __init__(self, driver):
         # 初始化Chrome
         self.driver = driver
-        self.driver.set_page_load_timeout(10)
-        # self.driver.maximize_window()
+        self.driver.set_page_load_timeout(60)
+        url = 'https://www.ifvod.tv/list?keyword=&star=&page=1&pageSize=30&cid=0,1,3&year=-1&language=-1&region=-1&status=-1&orderBy=2&desc=true'
         try:
             self.driver.get(url)
             f = open('url.txt', 'w+')
@@ -22,7 +22,7 @@ class MovieList:
             # 当页面加载时间超过设定时间，
             # 通过执行Javascript来stop加载，然后继续执行后续动作
 
-    def get_movie_list(self, count=1):
+    def get_movie_list(self, count=1, page=1):
         movie_url_list = list()
         timer = 0
         while len(movie_url_list) <= 0 or movie_url_list is None:
@@ -53,27 +53,14 @@ class MovieList:
             sys.exit(0)
         else:
             try:
-                next_page.click()
+                page += 1
+                url = 'https://www.ifvod.tv/list?keyword=&star=&page=%s&pageSize=30&cid=0,1,3&year=-1&language=-1&region=-1&status=-1&orderBy=2&desc=true', page
+                self.driver.get(url)
             except TimeoutException:
-                print('超时')
-                self.driver.execute_script("location.reload()")
-                self.get_movie_list(count)
+                print(u'页面加载超过设定时间，超时')
+
             try:
-                self.get_movie_list(count)
+                self.get_movie_list(count, page)
             except Exception:
                 self.driver.execute_script("location.reload()")
-                self.get_movie_list(count)
-
-
-    def next_page(self, url):
-        self.driver.get(url)
-        next_page = self.driver.find_elements_by_css_selector(
-            'body > div.root-container > app-root > app-search > div > div.page-container.list > div.inner.d-flex.flex-wrap > div > div.d-flex.mb-5.page-controls.align-items-center.justify-content-center.ng-star-inserted > app-pager > ul > li')[
-            -2]
-        if next_page.get_attribute('class') == 'disabled':
-            self.driver.close()
-            sys.exit(0)
-        else:
-            next_page.click()
-            self.get_movie_list()
-
+                self.get_movie_list(count, page)

@@ -161,8 +161,7 @@ class MovieDetail:
 if __name__ == '__main__':
     driver = ChromeDriver().get_driver()
     try:
-        movie = MovieList(driver,
-                          'https://www.ifvod.tv/list?keyword=&star=&page=1&pageSize=30&cid=0,1,3&year=-1&language=-1&region=-1&status=-1&orderBy=2&desc=true')
+        movie = MovieList(driver)
         movie.get_movie_list()
         detail = MovieDetail(driver)
         detail.start_crawl()
