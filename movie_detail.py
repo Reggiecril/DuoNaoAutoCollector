@@ -9,7 +9,6 @@ import requests
 from bs4 import BeautifulSoup
 
 from chrome_driver import ChromeDriver
-from movie_list import MovieList
 
 
 class MovieDetail:
@@ -97,10 +96,9 @@ class MovieDetail:
         number = 0
         while size == 0:
             try:
-                proxy = {'http': 'http://officepx.datayes.com:1080/', 'https': 'http://officepx.datayes.com:1080/'}
-                img_file = requests.get(image_url, proxies=proxy)
+                img_file = requests.get(image_url)
             except requests.exceptions.RequestException as e:
-                raise e
+                print(e)
             file_path = self.image_path(name)
             # 保存
             with open(file_path, 'wb') as f:
@@ -139,9 +137,9 @@ class MovieDetail:
 if __name__ == '__main__':
     driver = ChromeDriver().driver
     try:
-        movie = MovieList(driver,
-                          'https://www.ifvod.tv/list?keyword=&star=&page=1&pageSize=30&cid=0,1,3&year=-1&language=-1&region=-1&status=-1&orderBy=2&desc=true')
-        movie.get_movie_list()
+        # movie = MovieList(driver,
+        #                   'https://www.ifvod.tv/list?keyword=&star=&page=1&pageSize=30&cid=0,1,3&year=-1&language=-1&region=-1&status=-1&orderBy=2&desc=true')
+        # movie.get_movie_list()
         detail = MovieDetail(driver)
         detail.start_crawl()
     except Exception:
