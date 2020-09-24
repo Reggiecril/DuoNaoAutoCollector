@@ -1,4 +1,5 @@
 # coding:utf-8
+import json
 import time
 
 import requests
@@ -32,7 +33,7 @@ class MovieList:
                         flag = True
                         time_end = time.time()
                         with open('url.txt', 'a+') as file:
-                            file.write(r.json()['data']['info'][0]['result'] + '\n')
+                            file.write(json.dumps(r.json()['data']['info'][0]['result'], ensure_ascii=False) + '\n')
                             print(_url, time_end - time_start)
             if flag:
                 break
