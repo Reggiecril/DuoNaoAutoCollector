@@ -12,7 +12,7 @@ class MovieList:
     def __init__(self):
         # 初始化Chrome
         self.driver, self.server, self.proxy = ChromeDriver().get_driver()
-        f = open('url.txt', 'w+')
+        f = open('url.json', 'w+')
         f.close()
 
     def get_movie_list(self, page=1, limit=1):
@@ -33,7 +33,7 @@ class MovieList:
                         r = requests.get(_url)
                         flag = True
                         time_end = time.time()
-                        with open('url.txt', 'a+') as file:
+                        with open('url.json', 'a+') as file:
                             file.write(json.dumps(r.json()['data']['info'][0]['result'], ensure_ascii=False) + '\n')
                             print(_url, time_end - time_start)
             if flag:

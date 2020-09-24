@@ -1,21 +1,20 @@
 # coding:utf-8
 import json
-import os
 import re
 import time
 import uuid
 
-import requests
 from bs4 import BeautifulSoup
 
 from chrome_driver import ChromeDriver
+from image_saver import ImageSaver
 from movie_list import MovieList
 
 
 class MovieDetail:
-    def __init__(self, driver):
+    def __init__(self):
         # 初始化Chrome
-        self.driver = driver
+        self.driver, self.server, self.proxy = ChromeDriver().get_driver()
         # self.driver.set_page_load_timeout(10)
         f = open('movie_detail.json', 'w+')
         f.close()
@@ -70,7 +69,7 @@ class MovieDetail:
         map['热度排名'] = hot_count
         imager_name = str(uuid.uuid1())
         map['图片'] = imager_name
-        self.save_image(source.find('app-gg-block').find('img').get('src'), imager_name)
+        ImageSaver().save_image(source.find('app-gg-block').find('img').get('src'), imager_name)
         return map
 
     def load_file(self):
@@ -113,51 +112,7 @@ class MovieDetail:
             return_map[static_map[i]] = map[i]
         return return_map
 
-    def save_image(self, image_url, name):
-        if not image_url:
-            return False
-        size = 0
-        number = 0
-        while size == 0:
-            try:
-                img_file = requests.get(image_url)
-            except requests.exceptions.RequestException as e:
-                print(e)
-            file_path = self.image_path(name)
-            # 保存
-            with open(file_path, 'wb') as f:
-                f.write(img_file.content)
-            # 判断是否正确保存图片
-            size = os.path.getsize(file_path)
-            if size == 0:
-                os.remove(file_path)
-            # 如果该图片获取超过十次则跳过
-            number += 1
-            if number >= 10:
-                break
-        return (file_path if (size > 0) else False)
 
-    '''
-    图片保存的路径
-    '''
-
-    def image_path(self, image_name):
-        # 文件夹
-        file_dir = 'images/'
-        if not os.path.exists(file_dir):
-            os.makedirs(file_dir)
-        # 文件名
-        file_name = str(time.time())
-        # 文件后缀
-        suffix = '.jpeg'
-        return file_dir + image_name + suffix
-
-    # 检查是否为图片类型
-    def check_image(self, content_type):
-        if 'image' in content_type:
-            return False
-        else:
-            return True
 if __name__ == '__main__':
     driver = ChromeDriver().get_driver()
     try:
