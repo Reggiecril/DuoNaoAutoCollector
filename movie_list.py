@@ -23,7 +23,7 @@ class MovieList:
         result = self.proxy.har
         time_start = time.time()
         flag = False
-        while time.time() - time_start < 2:
+        while time.time() - time_start < 30:
             if 'log' in result is None or 'entries' in result['log']:
                 result = self.proxy.har
             for entry in result['log']['entries']:
