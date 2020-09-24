@@ -100,7 +100,4 @@ class MovieDetail:
 
 
 if __name__ == '__main__':
-    m = list()
-    with open('url.json', 'r') as f:
-        m = json.loads(f.read())
-    print([i['key'] for i in m])
+    MovieDetail().start_crawl()

@@ -47,10 +47,10 @@ class MovieList:
             self.driver.quit()
             self.server.stop()
             self.proxy.close()
-            self.driver = None
-            self.server = None
-            self.proxy = None
             time.sleep(5)
+            del self.driver
+            del self.server
+            del self.proxy
             gc.collect()
             time.sleep(10)
             print("reopen chrome ")
@@ -62,10 +62,10 @@ class MovieList:
             self.driver.quit()
             self.server.stop()
             self.proxy.close()
-            self.driver = None
-            self.server = None
-            self.proxy = None
             time.sleep(5)
+            del self.driver
+            del self.server
+            del self.proxy
             gc.collect()
             time.sleep(15)
         else:
