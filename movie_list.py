@@ -18,8 +18,8 @@ class MovieList:
             page)
         try:
             self.driver.get(url)
-            result = self.proxy.new_har("datayes" + str(page), options={'captureHeaders': True, 'captureContent': True})
-
+            self.proxy.new_har("datayes" + str(page), options={'captureHeaders': True, 'captureContent': True})
+            result = self.proxy.har
             while True:
                 if result['log']['entries'] is None or len(result['log']['entries']) <= 0:
                     result = self.proxy.har
