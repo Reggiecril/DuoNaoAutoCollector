@@ -1,5 +1,4 @@
 # coding:utf-8
-import gc
 import json
 import math
 import time
@@ -46,13 +45,7 @@ class MovieList:
             print("quit chrome")
             self.driver.quit()
             self.server.stop()
-            self.proxy.close()
             time.sleep(5)
-            del self.driver
-            del self.server
-            del self.proxy
-            gc.collect()
-            time.sleep(10)
             print("reopen chrome ")
             self.driver, self.server, self.proxy = ChromeDriver().get_driver()
             self.get_movie_list(page, limit)
@@ -61,13 +54,7 @@ class MovieList:
         if page >= limit:
             self.driver.quit()
             self.server.stop()
-            self.proxy.close()
             time.sleep(5)
-            del self.driver
-            del self.server
-            del self.proxy
-            gc.collect()
-            time.sleep(15)
         else:
             page += 1
             self.get_movie_list(page, limit)
