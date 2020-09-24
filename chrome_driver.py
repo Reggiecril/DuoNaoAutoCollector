@@ -7,8 +7,8 @@ from selenium.webdriver.chrome.options import Options
 
 class ChromeDriver:
     def get_driver(self):
-        # /root/browsermob-proxy-2.1.4/bin/browsermob-proxy
-        server = Server(r'/home/reggie/Documents/app/browsermob-proxy-2.1.4/bin/browsermob-proxy')
+        # server = Server(r'/home/reggie/Documents/app/browsermob-proxy-2.1.4/bin/browsermob-proxy')
+        server = Server(r'/root/browsermob-proxy-2.1.4/bin/browsermob-proxy')
         server.start()
         proxy = server.create_proxy()
         caps = DesiredCapabilities().CHROME
