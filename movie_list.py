@@ -20,7 +20,7 @@ class MovieList:
         url = 'https://www.ifvod.tv/list?keyword=&star=&page={0}&pageSize=30&cid=0,1,3&year=-1&language=-1&region=-1&status=-1&orderBy=2&desc=true'.format(
             page)
         self.driver.get(url)
-        self.proxy.new_har("datayes" + str(page), options={'captureHeaders': True, 'captureContent': True})
+        self.proxy.new_har("datayes", options={'captureHeaders': True, 'captureContent': True})
         result = self.proxy.har
         time_start = time.time()
         flag = False
