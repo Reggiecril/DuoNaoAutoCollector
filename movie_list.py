@@ -36,6 +36,7 @@ class MovieList:
                         with open('url.txt', 'a+') as file:
                             file.write(json.dumps(r.json()['data']['info'][0]['result'], ensure_ascii=False) + '\n')
                             print(_url, time_end - time_start)
+                            self.driver.close()
             if flag:
                 break
             result = self.proxy.har
@@ -49,7 +50,7 @@ class MovieList:
             self.driver, self.server, self.proxy = ChromeDriver().get_driver()
             self.get_movie_list(page)
             return
-        if page > limit:
+        if page >= limit:
             self.driver.quit()
             self.server.stop()
             self.proxy.close()
@@ -71,6 +72,7 @@ class MovieList:
                     _url = entry['request']['url']
                     if "api/list/Search" in _url:
                         r = requests.get(_url)
+                        print(_url)
                         return math.ceil(int(r.json()['data']['info'][0]['recordcount']) / 30)
 
 
