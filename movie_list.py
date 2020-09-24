@@ -10,7 +10,6 @@ class MovieList:
     def __init__(self):
         # 初始化Chrome
         self.driver, self.server, self.proxy = ChromeDriver().get_driver()
-        self.driver.set_page_load_timeout(60)
         f = open('url.txt', 'w+')
         f.close()
 
@@ -22,10 +21,10 @@ class MovieList:
             self.proxy.new_har("datayes" + str(page), options={'captureHeaders': True, 'captureContent': True})
             result = self.proxy.har
             time_start = time.time()
-            while True:
+            flag = False
+            while time.time() - time_start < 100:
                 if result['log']['entries'] is None or len(result['log']['entries']) <= 0:
                     result = self.proxy.har
-                flag = False
                 for entry in result['log']['entries']:
                     _url = entry['request']['url']
                     if "api/list/Search" in _url:
@@ -37,6 +36,10 @@ class MovieList:
                 if flag:
                     break
                 result = self.proxy.har
+            if not flag:
+                self.driver.close()
+                self.driver, self.server, self.proxy = ChromeDriver().get_driver()
+                self.get_movie_list(page)
         except TimeoutException:
             print("超时")
         movie_url_list = list()
