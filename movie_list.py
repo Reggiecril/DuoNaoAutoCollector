@@ -36,7 +36,6 @@ class MovieList:
                         with open('url.txt', 'a+') as file:
                             file.write(json.dumps(r.json()['data']['info'][0]['result'], ensure_ascii=False) + '\n')
                             print(_url, time_end - time_start)
-                            self.driver.close()
             if flag:
                 break
             result = self.proxy.har
@@ -50,12 +49,14 @@ class MovieList:
             self.driver, self.server, self.proxy = ChromeDriver().get_driver()
             self.get_movie_list(page)
             return
+        print(page, limit)
         if page >= limit:
             self.driver.quit()
             self.server.stop()
             self.proxy.close()
-        page += 1
-        self.get_movie_list(page)
+        else:
+            page += 1
+            self.get_movie_list(page)
 
     def get_limitation(self):
         url = 'https://www.ifvod.tv/list?keyword=&star=&page={0}&pageSize=30&cid=0,1,3&year=-1&language=-1&region=-1&status=-1&orderBy=2&desc=true'.format(
