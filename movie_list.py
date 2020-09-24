@@ -1,6 +1,8 @@
 # coding:utf-8
 import time
 
+import requests
+
 from chrome_driver import ChromeDriver
 
 
@@ -25,12 +27,11 @@ class MovieList:
             for entry in result['log']['entries']:
                 _url = entry['request']['url']
                 if "api/list/Search" in _url:
-                    _response = entry['response']
-                    _content = _response['content']['text']
+                    r = requests.get(url)
                     flag = True
                     time_end = time.time()
                     with open('url.txt', 'a+') as file:
-                        file.write(_content + '\n')
+                        file.write(r.json()['data']['info'][0]['result'] + '\n')
                         print(_url, time_end - time_start)
             if flag:
                 break
