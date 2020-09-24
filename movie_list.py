@@ -76,4 +76,4 @@ class MovieList:
 
 if __name__ == '__main__':
     movie = MovieList()
-    movie.get_movie_list(movie.get_limitation())
+    movie.get_movie_list(1, movie.get_limitation())
