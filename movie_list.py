@@ -23,7 +23,7 @@ class MovieList:
         result = self.proxy.har
         time_start = time.time()
         flag = False
-        while time.time() - time_start < 60:
+        while time.time() - time_start < 2:
             if 'log' in result is None or 'entries' in result['log']:
                 result = self.proxy.har
             for entry in result['log']['entries']:
@@ -45,6 +45,7 @@ class MovieList:
             self.driver.quit()
             self.server.stop()
             self.proxy.close()
+            time.sleep(5)
             print("reopen chrome ")
             self.driver, self.server, self.proxy = ChromeDriver().get_driver()
             self.get_movie_list(page, limit)
