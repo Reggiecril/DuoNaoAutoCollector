@@ -25,6 +25,5 @@ class ChromeDriver:
         chrome_options.add_experimental_option('excludeSwitches', ['enable-automation'])  # 以开发者模式
         chrome_options.add_argument('--proxy-server={0}'.format(proxy.proxy))
         drive = webdriver.Chrome(options=chrome_options, desired_capabilities=caps)
-        proxy.new_har("datayes", options={'captureHeaders': True, 'captureContent': True})
         return drive, server, proxy
         #
