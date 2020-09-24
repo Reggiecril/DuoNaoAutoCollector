@@ -11,7 +11,7 @@ class MovieList:
         f = open('url.txt', 'w+')
         f.close()
 
-    def get_movie_list(self, page=100):
+    def get_movie_list(self, page=1):
         url = 'https://www.ifvod.tv/list?keyword=&star=&page={0}&pageSize=30&cid=0,1,3&year=-1&language=-1&region=-1&status=-1&orderBy=2&desc=true'.format(
             page)
         self.driver.get(url)
