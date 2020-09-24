@@ -34,7 +34,8 @@ class MovieList:
                         flag = True
                         time_end = time.time()
                         with open('url.json', 'a+') as file:
-                            file.write(json.dumps(r.json()['data']['info'][0]['result'], ensure_ascii=False) + '\n')
+                            file.write(json.dumps([i['key'] for i in r.json()['data']['info'][0]['result']],
+                                                  ensure_ascii=False) + '\n')
                             print(_url, time_end - time_start)
             if flag:
                 break
@@ -45,7 +46,7 @@ class MovieList:
             self.driver.quit()
             self.server.stop()
             self.proxy.close()
-            time.sleep(5)
+            time.sleep(10)
             print("reopen chrome ")
             self.driver, self.server, self.proxy = ChromeDriver().get_driver()
             self.get_movie_list(page, limit)
@@ -55,6 +56,7 @@ class MovieList:
             self.driver.quit()
             self.server.stop()
             self.proxy.close()
+            time.sleep(15)
         else:
             page += 1
             self.get_movie_list(page, limit)

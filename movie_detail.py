@@ -8,7 +8,6 @@ from bs4 import BeautifulSoup
 
 from chrome_driver import ChromeDriver
 from image_saver import ImageSaver
-from movie_list import MovieList
 
 
 class MovieDetail:
@@ -114,13 +113,7 @@ class MovieDetail:
 
 
 if __name__ == '__main__':
-    driver = ChromeDriver().get_driver()
-    try:
-        movie = MovieList(driver)
-        movie.get_movie_list()
-        detail = MovieDetail(driver)
-        detail.start_crawl()
-    except Exception:
-        print("except")
-    finally:
-        driver.close()
+    m = list()
+    with open('url.json', 'r') as f:
+        m = json.loads(f.read())
+    print([i['key'] for i in m])
