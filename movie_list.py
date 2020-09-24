@@ -23,26 +23,24 @@ class MovieList:
             while True:
                 if result['log']['entries'] is None or len(result['log']['entries']) <= 0:
                     result = self.proxy.har
-                flag = False
                 for entry in result['log']['entries']:
                     _url = entry['request']['url']
                     if "api/list/Search" in _url:
-                        flag = True
-                if flag:
-                    break
+                        print(url)
+                        break
                 result = self.proxy.har
         except TimeoutException:
             print("超时")
         movie_url_list = list()
-        result = self.proxy.har
-        for entry in result['log']['entries']:
-            _url = entry['request']['url']
-            # 根据URL找到数据接口
-            if "api/list/Search" in _url:
-                _response = entry['response']
-                _content = _response['content']['text']
-                print(_content)
-                break
+        # result = self.proxy.har
+        # for entry in result['log']['entries']:
+        #     _url = entry['request']['url']
+        #     # 根据URL找到数据接口
+        #     if "api/list/Search" in _url:
+        #         _response = entry['response']
+        #         _content = _response['content']['text']
+        #         print(_content)
+        #         break
         # with open('url.txt', 'a+') as file:
         #     url_list = list()
         #     for i in movie_url_list:

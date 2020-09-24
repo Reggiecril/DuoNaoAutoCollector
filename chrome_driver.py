@@ -10,6 +10,7 @@ class ChromeDriver:
         # server = Server(r'/home/reggie/Documents/app/browsermob-proxy-2.1.4/bin/browsermob-proxy')
         server = Server(r'/root/browsermob-proxy-2.1.4/bin/browsermob-proxy')
         server.start()
+        # map={'http':'http://officepx.datayes.com','https':'http://officepx.datayes.com'}
         proxy = server.create_proxy()
         caps = DesiredCapabilities().CHROME
         caps["pageLoadStrategy"] = "none"
