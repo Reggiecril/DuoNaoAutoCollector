@@ -1,4 +1,5 @@
 # coding:utf-8
+import time
 
 from selenium.common.exceptions import TimeoutException
 
@@ -20,14 +21,19 @@ class MovieList:
             self.driver.get(url)
             self.proxy.new_har("datayes" + str(page), options={'captureHeaders': True, 'captureContent': True})
             result = self.proxy.har
+            time_start = time.time()
             while True:
                 if result['log']['entries'] is None or len(result['log']['entries']) <= 0:
                     result = self.proxy.har
+                flag = False
                 for entry in result['log']['entries']:
                     _url = entry['request']['url']
                     if "api/list/Search" in _url:
-                        print(url)
-                        break
+                        flag = True
+                        time_end = time.time()
+                        print(_url, time_end - time_start)
+                if flag:
+                    break
                 result = self.proxy.har
         except TimeoutException:
             print("超时")
