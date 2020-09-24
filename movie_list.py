@@ -1,8 +1,6 @@
 # coding:utf-8
 import time
 
-from selenium.common.exceptions import TimeoutException
-
 from chrome_driver import ChromeDriver
 
 
@@ -13,35 +11,35 @@ class MovieList:
         f = open('url.txt', 'w+')
         f.close()
 
-    def get_movie_list(self, page=1):
+    def get_movie_list(self, page=100):
         url = 'https://www.ifvod.tv/list?keyword=&star=&page={0}&pageSize=30&cid=0,1,3&year=-1&language=-1&region=-1&status=-1&orderBy=2&desc=true'.format(
             page)
-        try:
-            self.driver.get(url)
-            self.proxy.new_har("datayes" + str(page), options={'captureHeaders': True, 'captureContent': True})
-            result = self.proxy.har
-            time_start = time.time()
-            flag = False
-            while time.time() - time_start < 100:
-                if result['log']['entries'] is None or len(result['log']['entries']) <= 0:
-                    result = self.proxy.har
-                for entry in result['log']['entries']:
-                    _url = entry['request']['url']
-                    if "api/list/Search" in _url:
-                        flag = True
-                        time_end = time.time()
-                        with open('url.txt', 'a+') as file:
-                            file.write(_url)
-                            print(_url, time_end - time_start)
-                if flag:
-                    break
+        self.driver.get(url)
+        self.proxy.new_har("datayes" + str(page), options={'captureHeaders': True, 'captureContent': True})
+        result = self.proxy.har
+        time_start = time.time()
+        flag = False
+        while time.time() - time_start < 100:
+            if result['log']['entries'] is None or len(result['log']['entries']) <= 0:
                 result = self.proxy.har
-            if not flag:
-                self.driver.close()
-                self.driver, self.server, self.proxy = ChromeDriver().get_driver()
-                self.get_movie_list(page)
-        except TimeoutException:
-            print("超时")
+            for entry in result['log']['entries']:
+                _url = entry['request']['url']
+                if "api/list/Search" in _url:
+                    flag = True
+                    time_end = time.time()
+                    with open('url.txt', 'a+') as file:
+                        file.write(_url)
+                        print(_url, time_end - time_start)
+            if flag:
+                break
+            result = self.proxy.har
+        if not flag:
+            print("quit chrome")
+            self.driver.quit()
+            print("reopen chrome ")
+            self.driver, self.server, self.proxy = ChromeDriver().get_driver()
+            self.get_movie_list(page)
+
         movie_url_list = list()
         # result = self.proxy.har
         # for entry in result['log']['entries']:
@@ -65,8 +63,9 @@ class MovieList:
         page += 1
         self.get_movie_list(page)
 
+
     def __del__(self):
-        self.driver.close()
+        self.driver.quit()
         self.server.stop()
 
 
