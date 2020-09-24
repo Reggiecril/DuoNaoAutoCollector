@@ -25,10 +25,12 @@ class MovieList:
             for entry in result['log']['entries']:
                 _url = entry['request']['url']
                 if "api/list/Search" in _url:
+                    _response = entry['response']
+                    _content = _response['content']['text']
                     flag = True
                     time_end = time.time()
                     with open('url.txt', 'a+') as file:
-                        file.write(_url)
+                        file.write(_content + '\n')
                         print(_url, time_end - time_start)
             if flag:
                 break
