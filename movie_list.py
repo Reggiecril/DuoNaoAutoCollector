@@ -22,7 +22,7 @@ class MovieList:
         result = self.proxy.har
         time_start = time.time()
         flag = False
-        while time.time() - time_start < 100:
+        while time.time() - time_start < 60:
             if 'log' in result is None or 'entries' in result['log']:
                 result = self.proxy.har
             for entry in result['log']['entries']:
@@ -65,8 +65,6 @@ class MovieList:
         #         count += 1
         #     file.write(json.dumps(url_list, ensure_ascii=False) + '\n')
         #     print(json.dumps(url_list))
-        page += 1
-        self.get_movie_list(page)
 
 
     def __del__(self):
