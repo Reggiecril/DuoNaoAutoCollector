@@ -26,5 +26,5 @@ for entry in result['log']['entries']:
         _content = _response['content']['text']
         # 获取接口返回内容
         print(_content)
-
+driver.close()
 server.stop()
