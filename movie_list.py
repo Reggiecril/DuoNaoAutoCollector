@@ -25,14 +25,15 @@ class MovieList:
             if result['log']['entries'] is None or len(result['log']['entries']) <= 0:
                 result = self.proxy.har
             for entry in result['log']['entries']:
-                _url = entry['request']['url']
-                if "api/list/Search" in _url:
-                    r = requests.get(url)
-                    flag = True
-                    time_end = time.time()
-                    with open('url.txt', 'a+') as file:
-                        file.write(r.json()['data']['info'][0]['result'] + '\n')
-                        print(_url, time_end - time_start)
+                if entry['request'] and entry['request']['url']:
+                    _url = entry['request']['url']
+                    if "api/list/Search" in _url:
+                        r = requests.get(_url)
+                        flag = True
+                        time_end = time.time()
+                        with open('url.txt', 'a+') as file:
+                            file.write(r.json()['data']['info'][0]['result'] + '\n')
+                            print(_url, time_end - time_start)
             if flag:
                 break
             result = self.proxy.har
