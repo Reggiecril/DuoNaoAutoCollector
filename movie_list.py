@@ -47,7 +47,7 @@ class MovieList:
             self.proxy.close()
             print("reopen chrome ")
             self.driver, self.server, self.proxy = ChromeDriver().get_driver()
-            self.get_movie_list(page)
+            self.get_movie_list(page, limit)
             return
         print(page, limit)
         if page >= limit:
@@ -56,7 +56,7 @@ class MovieList:
             self.proxy.close()
         else:
             page += 1
-            self.get_movie_list(page)
+            self.get_movie_list(page, limit)
 
     def get_limitation(self):
         url = 'https://www.ifvod.tv/list?keyword=&star=&page={0}&pageSize=30&cid=0,1,3&year=-1&language=-1&region=-1&status=-1&orderBy=2&desc=true'.format(
