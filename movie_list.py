@@ -31,7 +31,9 @@ class MovieList:
                     if "api/list/Search" in _url:
                         flag = True
                         time_end = time.time()
-                        print(_url, time_end - time_start)
+                        with open('url.txt', 'a+') as file:
+                            file.write(_url)
+                            print(_url, time_end - time_start)
                 if flag:
                     break
                 result = self.proxy.har
