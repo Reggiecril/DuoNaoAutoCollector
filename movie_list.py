@@ -41,6 +41,8 @@ class MovieList:
         if not flag:
             print("quit chrome")
             self.driver.quit()
+            self.server.stop()
+            self.proxy.close()
             print("reopen chrome ")
             self.driver, self.server, self.proxy = ChromeDriver().get_driver()
             self.get_movie_list(page)
@@ -65,6 +67,8 @@ class MovieList:
         #         count += 1
         #     file.write(json.dumps(url_list, ensure_ascii=False) + '\n')
         #     print(json.dumps(url_list))
+        page += 1
+        self.get_movie_list(page)
 
 
     def __del__(self):
