@@ -26,7 +26,7 @@ class MovieList:
             if result['log']['entries'] is None or len(result['log']['entries']) <= 0:
                 result = self.proxy.har
             for entry in result['log']['entries']:
-                if entry['request'] and entry['request']['url']:
+                if entry.has_key('request') and entry['request'].has_key('url'):
                     _url = entry['request']['url']
                     if "api/list/Search" in _url:
                         r = requests.get(_url)
