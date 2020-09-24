@@ -23,10 +23,10 @@ class MovieList:
         time_start = time.time()
         flag = False
         while time.time() - time_start < 100:
-            if result['log']['entries'] is None or len(result['log']['entries']) <= 0:
+            if 'log' in result is None or 'entries' in result['log']:
                 result = self.proxy.har
             for entry in result['log']['entries']:
-                if entry.has_key('request') and entry['request'].has_key('url'):
+                if 'request' in entry and 'url' in entry['request']:
                     _url = entry['request']['url']
                     if "api/list/Search" in _url:
                         r = requests.get(_url)
