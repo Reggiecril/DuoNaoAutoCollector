@@ -38,6 +38,7 @@ class MovieList:
             if flag:
                 break
             result = self.proxy.har
+
         if not flag:
             print("quit chrome")
             self.driver.quit()
@@ -46,35 +47,16 @@ class MovieList:
             print("reopen chrome ")
             self.driver, self.server, self.proxy = ChromeDriver().get_driver()
             self.get_movie_list(page)
-
-        movie_url_list = list()
-        # result = self.proxy.har
-        # for entry in result['log']['entries']:
-        #     _url = entry['request']['url']
-        #     # 根据URL找到数据接口
-        #     if "api/list/Search" in _url:
-        #         _response = entry['response']
-        #         _content = _response['content']['text']
-        #         print(_content)
-        #         break
-        # with open('url.txt', 'a+') as file:
-        #     url_list = list()
-        #     for i in movie_url_list:
-        #         map = dict()
-        #         map['id'] = i.get('href').split("=")[1]
-        #         map['hot_count'] = count
-        #         url_list.append(map)
-        #         count += 1
-        #     file.write(json.dumps(url_list, ensure_ascii=False) + '\n')
-        #     print(json.dumps(url_list))
+            return
+        next_page = self.driver.find_elements_by_css_selector(
+            'body > div.root-container > app-root > app-search > div > div.page-container.list > div.inner.d-flex.flex-wrap > div > div.d-flex.mb-5.page-controls.align-items-center.justify-content-center.ng-star-inserted > app-pager > ul > li')[
+            -2]
+        if next_page.get_attribute('class') == 'disabled':
+            self.driver.quit()
+            self.server.stop()
+            self.proxy.close()
         page += 1
         self.get_movie_list(page)
-
-
-    def __del__(self):
-        self.driver.quit()
-        self.server.stop()
-
 
 if __name__ == '__main__':
     movie = MovieList()
