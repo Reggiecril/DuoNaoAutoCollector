@@ -1,4 +1,5 @@
 # coding:utf-8
+import gc
 import json
 import math
 import time
@@ -23,7 +24,7 @@ class MovieList:
         result = self.proxy.har
         time_start = time.time()
         flag = False
-        while time.time() - time_start < 30:
+        while time.time() - time_start < 10:
             if 'log' in result is None or 'entries' in result['log']:
                 result = self.proxy.har
             for entry in result['log']['entries']:
@@ -46,6 +47,11 @@ class MovieList:
             self.driver.quit()
             self.server.stop()
             self.proxy.close()
+            self.driver = None
+            self.server = None
+            self.proxy = None
+            time.sleep(5)
+            gc.collect()
             time.sleep(10)
             print("reopen chrome ")
             self.driver, self.server, self.proxy = ChromeDriver().get_driver()
@@ -56,6 +62,11 @@ class MovieList:
             self.driver.quit()
             self.server.stop()
             self.proxy.close()
+            self.driver = None
+            self.server = None
+            self.proxy = None
+            time.sleep(5)
+            gc.collect()
             time.sleep(15)
         else:
             page += 1

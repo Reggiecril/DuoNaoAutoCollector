@@ -1,10 +1,9 @@
 # coding:utf-8
 import json
-import re
 import time
 import uuid
 
-from bs4 import BeautifulSoup
+import requests
 
 from chrome_driver import ChromeDriver
 from image_saver import ImageSaver
@@ -21,62 +20,73 @@ class MovieDetail:
     def start_crawl(self):
         url_list = self.load_file()
         for i in url_list:
-            for j in i:
-                self.get_movie_detail(j['id'], j['hot_count'])
-                print(j['id'], j['hot_count'])
+            self.get_movie_detail(i)
+            print(i)
         self.save_as_json()
 
-    def get_movie_detail(self, url, hot_count=0, file_name='movie_detail.json'):
-        map = dict()
-        while len(map) <= 0 or map is None:
-            try:
-                self.driver.get('https://www.ifvod.tv/detaili?id=' + url)
-                map = self.get_movie_info(hot_count)
-            except Exception:
-                continue
-            with open(file_name, 'a+') as file:
-                file.write(json.dumps(map, ensure_ascii=False) + '\n')
-                print(json.dumps(map, ensure_ascii=False))
+    def get_movie_detail(self, url, file_name='movie_detail.json'):
+        self.driver.get('https://www.ifvod.tv/detaili?id=' + url)
+        self.proxy.new_har(url, options={'captureHeaders': True, 'captureContent': True})
+        result = self.proxy.har
+        time_start = time.time()
+        flag = False
+        while time.time() - time_start < 30:
+            if 'log' in result is None or 'entries' in result['log']:
+                result = self.proxy.har
+            for entry in result['log']['entries']:
+                if 'request' in entry and 'url' in entry['request']:
+                    _url = entry['request']['url']
+                    if "api/video/detail" in _url:
+                        r = requests.get(_url)
+                        flag = True
+                        result = self.get_movie_info(r.json())
+                        with open(file_name, 'a+') as file:
+                            file.write(json.dumps(result, ensure_ascii=False) + '\n')
+                            print(json.dumps(result, ensure_ascii=False))
+                        time_end = time.time()
+                        print(time_end - time_start)
 
-    def get_movie_info(self, hot_count):
-        map = dict()
-        movie_info = list()
-        source = BeautifulSoup(self.driver.page_source, "lxml")
-        timer = 0
-        while movie_info is None or len(movie_info) <= 0:
-            source = BeautifulSoup(self.driver.page_source, "lxml")
-            for i in source.select(
-                    'body > div.root-container > app-root > app-index > div.border-warp > div.container >div.page-container >div.d-flex > app-video-info > div.video-detail > div'):
-                movie_info.append(i.get_text())
-            time.sleep(0.5)
-            timer += 1
-            if timer % 10 == 0:
-                self.driver.execute_script("location.reload()")
-            if timer > 50:
-                return None
-        map['电影名'] = movie_info[0]
-        movie_info = movie_info[2:]
-        for i in movie_info:
-            map[i.split('：')[0].strip()] = i.split('：')[1].strip()
-        number = source.select(
-            'body > div.root-container > app-root > app-index > div.border-warp > div.container > div.page-container > app-video-user-data-bar > div > div.d-flex > div.ico > div.d-flex')
-        map['评论'] = re.sub("\D", "", number[0].get_text())
-        map['赞'] = re.sub("\D", "", number[1].get_text())
-        map['踩'] = re.sub("\D", "", number[2].get_text())
-        brief = source.find('app-summary')
-        map['简介'] = brief.get_text()
-        map['热度排名'] = hot_count
-        imager_name = str(uuid.uuid1())
-        map['图片'] = imager_name
-        ImageSaver().save_image(source.find('app-gg-block').find('img').get('src'), imager_name)
-        return map
+            if flag:
+                break
+            result = self.proxy.har
+        if not flag:
+            print("quit chrome")
+            self.driver.quit()
+            self.server.stop()
+            self.proxy.close()
+            time.sleep(10)
+            print("reopen chrome ")
+            self.driver, self.server, self.proxy = ChromeDriver().get_driver()
+            self.get_movie_detail(url)
+
+    def get_movie_info(self, json_dic):
+        info = json_dic['data']['info'][0]
+        result = dict()
+        result["language"] = info['vl']['lang']
+        result["publishYear"] = info['post_Year']
+        result["brief"] = info['contxt']
+        result["review"] = info['commentNumber']
+        result["addDate"] = info['add_date']
+        result["unlike"] = info['vl']['dc']
+        result["region"] = info['vl']['regional']
+        result["hotRank"] = info['vl']['hot']
+        result["actor"] = info['vl']['starring']
+        result["channel"] = info['channel']
+        result["name"] = info['vl']['title']
+        result["director"] = info['vl']['director']
+        result["like"] = info['vl']['dd']
+        result["category"] = info['videoType']
+        image_name = str(uuid.uuid1())
+        result['image'] = image_name
+        ImageSaver().save_image('https://' + info['imgPath'], image_name)
+        return result
 
     def load_file(self):
         url_list = list()
-        with open("url.txt", "r") as file:
+        with open("url.json", "r") as file:
             text_lines = file.readlines()
             for line in text_lines:
-                url_list.append(json.loads(line))
+                url_list.extend(json.loads(line))
         return url_list
 
     def save_as_json(self):
@@ -84,32 +94,9 @@ class MovieDetail:
         with open('movie_detail.json', 'r') as file:
             text_lines = file.readlines()
             for line in text_lines:
-                l.append(self.convert_json(line))
+                l.append(json.loads(line))
         with open('movie_detail.json', 'w+') as f:
             f.write(json.dumps(l, ensure_ascii=False))
-
-    def convert_json(self, line):
-        static_map = dict()
-        static_map["语言"] = "language"
-        static_map["年份"] = "publishYear"
-        static_map["图片"] = "image"
-        static_map["简介"] = "brief"
-        static_map["评论"] = "review"
-        static_map["添加"] = "addDate"
-        static_map["踩"] = "unlike"
-        static_map["区域"] = "region"
-        static_map["热度排名"] = "hotRank"
-        static_map["主演"] = "actor"
-        static_map["频道"] = "channel"
-        static_map["电影名"] = "name"
-        static_map["导演"] = "director"
-        static_map["赞"] = "like"
-        static_map["分类"] = "category"
-        map = json.loads(line)
-        return_map = dict()
-        for i in map:
-            return_map[static_map[i]] = map[i]
-        return return_map
 
 
 if __name__ == '__main__':
