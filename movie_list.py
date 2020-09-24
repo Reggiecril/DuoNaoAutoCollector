@@ -18,7 +18,8 @@ class MovieList:
             page)
         try:
             self.driver.get(url)
-            result = self.proxy.har
+            result = self.proxy.new_har("datayes" + str(page), options={'captureHeaders': True, 'captureContent': True})
+
             while True:
                 if result['log']['entries'] is None or len(result['log']['entries']) <= 0:
                     result = self.proxy.har
@@ -40,8 +41,8 @@ class MovieList:
             if "api/list/Search" in _url:
                 _response = entry['response']
                 _content = _response['content']['text']
-                # 获取接口返回内容
                 print(_content)
+                break
         # with open('url.txt', 'a+') as file:
         #     url_list = list()
         #     for i in movie_url_list:
