@@ -1,5 +1,4 @@
 import os
-import shutil
 import time
 
 import requests
@@ -33,11 +32,6 @@ class ImageSaver:
     def image_path(self, image_name):
         # 文件夹
         file_dir = 'images/'
-        if not os.path.exists(file_dir):
-            os.makedirs(file_dir)
-        else:
-            shutil.rmtree(file_dir)
-            os.makedirs(file_dir)
         # 文件名
         file_name = str(time.time())
         # 文件后缀

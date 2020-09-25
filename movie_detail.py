@@ -1,6 +1,7 @@
 # coding:utf-8
 import json
 import os
+import shutil
 import time
 import uuid
 
@@ -17,6 +18,12 @@ class MovieDetail:
         # self.driver.set_page_load_timeout(10)
         f = open('movie_detail.json', 'w+')
         f.close()
+        file_dir = 'images/'
+        if not os.path.exists(file_dir):
+            os.makedirs(file_dir)
+        else:
+            shutil.rmtree(file_dir)
+            os.makedirs(file_dir)
 
     def start_crawl(self):
         url_list = self.load_file()
