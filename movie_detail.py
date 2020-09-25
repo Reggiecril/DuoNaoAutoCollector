@@ -20,13 +20,27 @@ class MovieDetail:
     def start_crawl(self):
         url_list = self.load_file()
         for i in url_list:
-            self.get_movie_detail(i)
+            flag = self.get_movie_detail(i)
+            while not flag:
+                print("quit chrome", '=' * 50)
+                self.driver.quit()
+                print("driver.quit", '=' * 50)
+                self.server.stop()
+                print("server.stop", '=' * 50)
+                self.proxy.close()
+                print("proxy.close", '=' * 50)
+                time.sleep(10)
+                print("reopen chrome ", '=' * 50)
+                self.driver, self.server, self.proxy = ChromeDriver().get_driver()
+                flag = self.get_movie_detail(i)
             print(i)
         self.save_as_json()
+        self.driver.quit()
+        self.server.stop()
 
     def get_movie_detail(self, url, file_name='movie_detail.json'):
         self.driver.get('https://www.ifvod.tv/detaili?id=' + url)
-        self.proxy.new_har(url, options={'captureHeaders': True, 'captureContent': True})
+        self.proxy.new_har('datayes', options={'captureHeaders': True, 'captureContent': True})
         result = self.proxy.har
         time_start = time.time()
         flag = False
@@ -49,15 +63,7 @@ class MovieDetail:
             if flag:
                 break
             result = self.proxy.har
-        if not flag:
-            print("quit chrome")
-            self.driver.quit()
-            self.server.stop()
-            self.proxy.close()
-            time.sleep(10)
-            print("reopen chrome ")
-            self.driver, self.server, self.proxy = ChromeDriver().get_driver()
-            self.get_movie_detail(url)
+        return flag
 
     def get_movie_info(self, json_dic):
         info = json_dic['data']['info'][0]
