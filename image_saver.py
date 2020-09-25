@@ -19,7 +19,7 @@ class ImageSaver:
             # 判断是否正确保存图片
             size = os.path.getsize(file_path)
             if size == 0:
-                os.remove(file_path)
+                os.removedirs(file_path)
             # 如果该图片获取超过十次则跳过
             number += 1
             if number >= 10:
