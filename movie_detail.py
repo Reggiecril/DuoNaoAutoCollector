@@ -27,8 +27,6 @@ class MovieDetail:
                 print("driver.quit", '=' * 50)
                 self.server.stop()
                 print("server.stop", '=' * 50)
-                self.proxy.close()
-                print("proxy.close", '=' * 50)
                 time.sleep(10)
                 print("reopen chrome ", '=' * 50)
                 self.driver, self.server, self.proxy = ChromeDriver().get_driver()
