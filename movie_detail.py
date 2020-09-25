@@ -19,6 +19,7 @@ class MovieDetail:
 
     def start_crawl(self):
         url_list = self.load_file()
+        count = 1
         for i in url_list:
             flag = self.get_movie_detail(i)
             while not flag:
@@ -31,7 +32,8 @@ class MovieDetail:
                 print("reopen chrome ", '=' * 50)
                 self.driver, self.server, self.proxy = ChromeDriver().get_driver()
                 flag = self.get_movie_detail(i)
-            print(i)
+            print(count, i)
+            count += 1
         self.save_as_json()
         self.driver.quit()
         self.server.stop()
