@@ -11,10 +11,7 @@ class ImageSaver:
         size = 0
         number = 0
         while size == 0:
-            try:
-                img_file = requests.get(image_url)
-            except requests.exceptions.RequestException as e:
-                print(e)
+            img_file = requests.get(image_url)
             file_path = self.image_path(name)
             # 保存
             with open(file_path, 'wb') as f:
