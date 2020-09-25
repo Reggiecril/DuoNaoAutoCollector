@@ -14,29 +14,37 @@ class MovieDetail:
         # 初始化Chrome
         self.driver, self.server, self.proxy = ChromeDriver().get_driver()
         # self.driver.set_page_load_timeout(10)
+
+        with open('movie_detail.json', 'r') as file:
+            map = json.loads(file.read())
+            if 'duonaoId' in map:
+                self.exists_id = set([i['duonaoId'] for i in map])
         f = open('movie_detail.json', 'w+')
         f.close()
 
     def start_crawl(self):
         url_list = self.load_file()
         count = 1
+        time_start = time.time()
         for i in url_list:
-            flag = self.get_movie_detail(i)
-            while not flag:
-                print("quit chrome", '=' * 50)
-                self.driver.quit()
-                print("driver.quit", '=' * 50)
-                self.server.stop()
-                print("server.stop", '=' * 50)
-                time.sleep(10)
-                print("reopen chrome ", '=' * 50)
-                self.driver, self.server, self.proxy = ChromeDriver().get_driver()
+            if self.exists_id and i not in self.exists_id:
                 flag = self.get_movie_detail(i)
+                while not flag:
+                    print("quit chrome", '=' * 50)
+                    self.driver.quit()
+                    print("driver.quit", '=' * 50)
+                    self.server.stop()
+                    print("server.stop", '=' * 50)
+                    time.sleep(10)
+                    print("reopen chrome ", '=' * 50)
+                    self.driver, self.server, self.proxy = ChromeDriver().get_driver()
+                    flag = self.get_movie_detail(i)
             print(count, i)
             count += 1
         self.save_as_json()
         self.driver.quit()
         self.server.stop()
+        print('程序运行时间:', time.time() - time_start, '=' * 40)
 
     def get_movie_detail(self, url, file_name='movie_detail.json'):
         self.driver.get('https://www.ifvod.tv/detaili?id=' + url)
@@ -56,7 +64,7 @@ class MovieDetail:
                         result = self.get_movie_info(r.json())
                         with open(file_name, 'a+') as file:
                             file.write(json.dumps(result, ensure_ascii=False) + '\n')
-                            print(json.dumps(result, ensure_ascii=False))
+                            print(_url)
                         time_end = time.time()
                         print(time_end - time_start)
 
@@ -68,6 +76,7 @@ class MovieDetail:
     def get_movie_info(self, json_dic):
         info = json_dic['data']['info'][0]
         result = dict()
+        result["duonaoId"] = info['key']
         result["language"] = info['vl']['lang']
         result["publishYear"] = info['post_Year']
         result["brief"] = info['contxt']
@@ -103,7 +112,6 @@ class MovieDetail:
                 l.append(json.loads(line))
         with open('movie_detail.json', 'w+') as f:
             f.write(json.dumps(l, ensure_ascii=False))
-
 
 if __name__ == '__main__':
     MovieDetail().start_crawl()
