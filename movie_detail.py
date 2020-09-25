@@ -30,7 +30,8 @@ class MovieDetail:
         count = 1
         time_start = time.time()
         for i in url_list:
-            if self.exists_id and i not in self.exists_id:
+            print(self.exists_id)
+            if i not in self.exists_id:
                 flag = self.get_movie_detail(i)
                 while not flag:
                     print("quit chrome", '=' * 50)
