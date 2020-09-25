@@ -26,7 +26,7 @@ class MovieList:
                 time.sleep(5)
                 print("reopen chrome ")
                 self.driver, self.server, self.proxy = ChromeDriver().get_driver()
-                self.get_movie_list(i)
+                flag = self.get_movie_list(i)
         self.driver.quit()
         self.server.stop()
         time.sleep(5)
@@ -56,6 +56,7 @@ class MovieList:
             if flag:
                 break
             result = self.proxy.har
+        return flag
 
 
     def get_limitation(self):
@@ -79,4 +80,4 @@ class MovieList:
 
 if __name__ == '__main__':
     movie = MovieList()
-    movie.get_movie_list(1, movie.get_limitation())
+    movie.start_crawl()
