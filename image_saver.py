@@ -1,4 +1,5 @@
 import os
+import shutil
 import time
 
 import requests
@@ -35,7 +36,7 @@ class ImageSaver:
         if not os.path.exists(file_dir):
             os.makedirs(file_dir)
         else:
-            os.removedirs(file_dir)
+            shutil.rmtree(file_dir)
             os.makedirs(file_dir)
         # 文件名
         file_name = str(time.time())
