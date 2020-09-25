@@ -15,7 +15,6 @@ class MovieDetail:
     def __init__(self):
         # 初始化Chrome
         self.driver, self.server, self.proxy = ChromeDriver().get_driver()
-        self.exists_id = set()
         # self.driver.set_page_load_timeout(10)
         f = open('movie_detail.json', 'w+')
         f.close()
@@ -58,9 +57,10 @@ class MovieDetail:
                     if "api/video/detail" in _url:
                         r = requests.get(_url)
                         flag = True
-                        result = self.get_movie_info(r.json())
+                        res = self.get_movie_info(r.json())
                         with open(file_name, 'a+') as file:
-                            file.write(json.dumps(result, ensure_ascii=False) + '\n')
+                            print(res)
+                            file.write(json.dumps(res, ensure_ascii=False) + '\n')
                             print(_url)
                         time_end = time.time()
                         print(time_end - time_start)
