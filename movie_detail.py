@@ -14,11 +14,13 @@ class MovieDetail:
         # 初始化Chrome
         self.driver, self.server, self.proxy = ChromeDriver().get_driver()
         # self.driver.set_page_load_timeout(10)
-
-        with open('movie_detail.json', 'r') as file:
-            map = json.loads(file.read())
-            if 'duonaoId' in map:
-                self.exists_id = set([i['duonaoId'] for i in map])
+        try:
+            with open('movie_detail.json', 'r') as file:
+                map = json.loads(file.read())
+                if 'duonaoId' in map:
+                    self.exists_id = set([i['duonaoId'] for i in map])
+        except Exception:
+            pass
         f = open('movie_detail.json', 'w+')
         f.close()
 
