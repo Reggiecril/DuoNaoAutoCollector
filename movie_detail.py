@@ -95,7 +95,6 @@ class MovieDetail:
         image_name = str(uuid.uuid1())
         result['image'] = image_name
         ImageSaver().save_image('https:' + info['imgPath'], image_name)
-        print(result)
         return result
 
     def load_file(self):

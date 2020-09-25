@@ -19,7 +19,7 @@ class ImageSaver:
             # 判断是否正确保存图片
             size = os.path.getsize(file_path)
             if size == 0:
-                os.removedirs(file_path)
+                os.remove(file_path)
             # 如果该图片获取超过十次则跳过
             number += 1
             if number >= 10:
@@ -35,7 +35,7 @@ class ImageSaver:
         if not os.path.exists(file_dir):
             os.makedirs(file_dir)
         else:
-            os.remove(file_dir)
+            os.removedirs(file_dir)
             os.makedirs(file_dir)
         # 文件名
         file_name = str(time.time())
