@@ -54,7 +54,13 @@ class MovieDetail:
                 if 'request' in entry and 'url' in entry['request']:
                     _url = entry['request']['url']
                     if "api/video/detail" in _url:
-                        r = requests.get(_url)
+                        r = None
+                        count = 0
+                        while r is None and count < 3:
+                            r = requests.get(_url)
+                            count += 1
+                        if r is None:
+                            return True
                         flag = True
                         res = self.get_movie_info(r.json())
                         with open(file_name, 'a+') as file:
