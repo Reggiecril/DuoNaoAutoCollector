@@ -1,6 +1,5 @@
 # coding:utf-8
 import json
-import os
 import time
 import uuid
 
@@ -8,7 +7,6 @@ import requests
 
 from chrome_driver import ChromeDriver
 from image_saver import ImageSaver
-from movie_list import MovieList
 
 
 class MovieDetail:
@@ -86,7 +84,7 @@ class MovieDetail:
         result["channel"] = info['channel']
         result["name"] = info['vl']['title']
         result["director"] = info['vl']['director']
-        result["like"] = info['vl']['dd']
+        result["interest"] = info['vl']['dd']
         result["category"] = info['videoType']
         image_name = str(uuid.uuid1())
         result['image'] = image_name
@@ -112,7 +110,10 @@ class MovieDetail:
 
 
 if __name__ == '__main__':
-    MovieList().start_crawl()
-    MovieDetail().start_crawl()
-    os.popen('scp movie_detail.json root@122.51.155.8:~/')
-    os.popen('scp -r images root@122.51.155.8:~/')
+    l = list()
+    with open('movie_detail.json', 'r') as file:
+        text_lines = file.readlines()
+        for line in text_lines:
+            l.append(json.loads(line))
+    with open('movie_detail.json', 'w+') as f:
+        f.write(json.dumps(l, ensure_ascii=False))

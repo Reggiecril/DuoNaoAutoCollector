@@ -24,7 +24,6 @@ class ImageSaver:
             number += 1
             if number >= 10:
                 break
-        return (file_path if (size > 0) else False)
 
     '''
     图片保存的路径
@@ -35,15 +34,12 @@ class ImageSaver:
         file_dir = 'images/'
         if not os.path.exists(file_dir):
             os.makedirs(file_dir)
+        else:
+            os.remove(file_dir)
+            os.makedirs(file_dir)
         # 文件名
         file_name = str(time.time())
         # 文件后缀
         suffix = '.jpeg'
         return file_dir + image_name + suffix
 
-    # 检查是否为图片类型
-    def check_image(self, content_type):
-        if 'image' in content_type:
-            return False
-        else:
-            return True
