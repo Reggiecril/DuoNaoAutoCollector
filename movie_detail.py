@@ -59,7 +59,6 @@ class MovieDetail:
                         flag = True
                         res = self.get_movie_info(r.json())
                         with open(file_name, 'a+') as file:
-                            print(res)
                             file.write(json.dumps(res, ensure_ascii=False) + '\n')
                             print(_url)
                         time_end = time.time()
@@ -91,6 +90,7 @@ class MovieDetail:
         image_name = str(uuid.uuid1())
         result['image'] = image_name
         ImageSaver().save_image('https:' + info['imgPath'], image_name)
+        print(result)
         return result
 
     def load_file(self):
