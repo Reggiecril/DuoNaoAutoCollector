@@ -1,5 +1,6 @@
 # coding:utf-8
 import json
+import os
 import time
 import uuid
 
@@ -7,6 +8,7 @@ import requests
 
 from chrome_driver import ChromeDriver
 from image_saver import ImageSaver
+from movie_list import MovieList
 
 
 class MovieDetail:
@@ -15,13 +17,6 @@ class MovieDetail:
         self.driver, self.server, self.proxy = ChromeDriver().get_driver()
         self.exists_id = set()
         # self.driver.set_page_load_timeout(10)
-        try:
-            with open('movie_detail.json', 'r') as file:
-                map = json.loads(file.read())
-                if 'duonaoId' in map:
-                    self.exists_id.union([i['duonaoId'] for i in map])
-        except Exception:
-            pass
         f = open('movie_detail.json', 'w+')
         f.close()
 
@@ -30,19 +25,17 @@ class MovieDetail:
         count = 1
         time_start = time.time()
         for i in url_list:
-            print(self.exists_id)
-            if i not in self.exists_id:
+            flag = self.get_movie_detail(i)
+            while not flag:
+                print("quit chrome", '=' * 50)
+                self.driver.quit()
+                print("driver.quit", '=' * 50)
+                self.server.stop()
+                print("server.stop", '=' * 50)
+                time.sleep(10)
+                print("reopen chrome ", '=' * 50)
+                self.driver, self.server, self.proxy = ChromeDriver().get_driver()
                 flag = self.get_movie_detail(i)
-                while not flag:
-                    print("quit chrome", '=' * 50)
-                    self.driver.quit()
-                    print("driver.quit", '=' * 50)
-                    self.server.stop()
-                    print("server.stop", '=' * 50)
-                    time.sleep(10)
-                    print("reopen chrome ", '=' * 50)
-                    self.driver, self.server, self.proxy = ChromeDriver().get_driver()
-                    flag = self.get_movie_detail(i)
             print(count, i)
             count += 1
         self.save_as_json()
@@ -117,5 +110,9 @@ class MovieDetail:
         with open('movie_detail.json', 'w+') as f:
             f.write(json.dumps(l, ensure_ascii=False))
 
+
 if __name__ == '__main__':
+    MovieList().start_crawl()
     MovieDetail().start_crawl()
+    os.popen('scp movie_detail.json root@122.51.155.8:~/')
+    os.popen('scp -r images root@122.51.155.8:~/')
