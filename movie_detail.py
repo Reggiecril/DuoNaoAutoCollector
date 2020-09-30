@@ -8,8 +8,10 @@ import uuid
 import paramiko
 import requests
 
+from banner import Banner
 from chrome_driver import ChromeDriver
 from image_saver import ImageSaver
+from movie_list import MovieList
 
 
 class MovieDetail:
@@ -141,7 +143,6 @@ class MovieDetail:
         client.close()
 
 if __name__ == '__main__':
-    # MovieList().start_crawl()
+    Banner().get_limitation()
+    MovieList().start_crawl()
     MovieDetail().start_crawl()
-    os.popen('scp movie_detail.json root@122.51.155.8:~/')
-    os.popen('scp -r images root@122.51.155.8:~/')
