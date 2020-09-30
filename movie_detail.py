@@ -5,6 +5,7 @@ import shutil
 import time
 import uuid
 
+import paramiko
 import requests
 
 from chrome_driver import ChromeDriver
@@ -47,6 +48,7 @@ class MovieDetail:
         self.driver.quit()
         self.server.stop()
         print('程序运行时间:', time.time() - time_start, '=' * 40)
+        self.send_file('movie_detail.json')
 
     def get_movie_detail(self, url, file_name='movie_detail.json'):
         self.driver.get('https://www.ifvod.tv/detaili?id=' + url)
@@ -121,6 +123,19 @@ class MovieDetail:
         with open('movie_detail.json', 'w+') as f:
             f.write(json.dumps(l, ensure_ascii=False))
 
+    def send_file(self, file_name):
+        client = paramiko.SSHClient()  # 获取SSHClient实例
+        client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        client.connect("122.51.155.8", username="root", password="123")  # 连接SSH服务端
+        transport = client.get_transport()  # 获取Transport实例
+
+        # 创建sftp对象，SFTPClient是定义怎么传输文件、怎么交互文件
+        sftp = paramiko.SFTPClient.from_transport(transport)
+        # 将本地 api.py 上传至服务器 /www/test.py。文件上传并重命名为test.py
+        sftp.put(file_name, "/root/{}".format(file_name))
+
+        # 关闭连接
+        client.close()
 
 if __name__ == '__main__':
     # MovieList().start_crawl()
