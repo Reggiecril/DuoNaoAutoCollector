@@ -1,6 +1,7 @@
 # coding:utf-8
 import json
 import math
+import os
 import time
 
 import requests
@@ -9,10 +10,13 @@ from chrome_driver import ChromeDriver
 
 
 class MovieList:
-    def __init__(self):
+    def __init__(self, project_path='project/'):
         # 初始化Chrome
         self.driver, self.server, self.proxy = ChromeDriver().get_driver()
-        f = open('url.json', 'w+')
+        self.project_path = project_path
+        if not os.path.exists(project_path):
+            os.makedirs(project_path)
+        f = open(project_path + 'url.json', 'w+')
         f.close()
 
     def start_crawl(self):
@@ -49,7 +53,7 @@ class MovieList:
                         r = requests.get(_url)
                         flag = True
                         time_end = time.time()
-                        with open('url.json', 'a+') as file:
+                        with open(self.project_path + 'url.json', 'a+') as file:
                             file.write(json.dumps([i['key'] for i in r.json()['data']['info'][0]['result']],
                                                   ensure_ascii=False) + '\n')
                             print(_url, time_end - time_start)

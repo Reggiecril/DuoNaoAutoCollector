@@ -13,13 +13,16 @@ from image_saver import ImageSaver
 
 
 class MovieDetail:
-    def __init__(self):
+    def __init__(self, project_path='project/'):
         # 初始化Chrome
         self.driver, self.server, self.proxy = ChromeDriver().get_driver()
+        self.project_path = project_path
+        if not os.path.exists(project_path):
+            os.makedirs(project_path)
         # self.driver.set_page_load_timeout(10)
         f = open('movie_detail.json', 'w+')
         f.close()
-        file_dir = 'images/'
+        file_dir = project_path + 'images/'
         if not os.path.exists(file_dir):
             os.makedirs(file_dir)
         else:
@@ -48,7 +51,7 @@ class MovieDetail:
         self.driver.quit()
         self.server.stop()
         print('程序运行时间:', time.time() - time_start, '=' * 40)
-        self.send_file('movie_detail.json')
+        self.send_file(self.project_path)
 
     def get_movie_detail(self, url, file_name='movie_detail.json'):
         self.driver.get('https://www.ifvod.tv/detaili?id=' + url)
@@ -72,7 +75,7 @@ class MovieDetail:
                             return True
                         flag = True
                         res = self.get_movie_info(r.json())
-                        with open(file_name, 'a+') as file:
+                        with open(self.project_path + file_name, 'a+') as file:
                             file.write(json.dumps(res, ensure_ascii=False) + '\n')
                             print(_url)
                         time_end = time.time()
@@ -103,12 +106,12 @@ class MovieDetail:
         result["category"] = info['videoType']
         image_name = str(uuid.uuid1())
         result['image'] = image_name
-        ImageSaver().save_image('https:' + info['imgPath'], 'images/', image_name + '.jpeg')
+        ImageSaver().save_image('https:' + info['imgPath'], self.project_path + 'images/', image_name + '.jpeg')
         return result
 
     def load_file(self):
         url_list = list()
-        with open("url.json", "r") as file:
+        with open(self.project_path + "url.json", "r") as file:
             text_lines = file.readlines()
             for line in text_lines:
                 url_list.extend(json.loads(line))
@@ -116,11 +119,11 @@ class MovieDetail:
 
     def save_as_json(self):
         l = list()
-        with open('movie_detail.json', 'r') as file:
+        with open(self.project_path + 'movie_detail.json', 'r') as file:
             text_lines = file.readlines()
             for line in text_lines:
                 l.append(json.loads(line))
-        with open('movie_detail.json', 'w+') as f:
+        with open(self.project_path + 'movie_detail.json', 'w+') as f:
             f.write(json.dumps(l, ensure_ascii=False))
 
     def send_file(self, file_name):

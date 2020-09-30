@@ -1,5 +1,6 @@
 # coding:utf-8
 import json
+import os
 import time
 import uuid
 
@@ -10,10 +11,13 @@ from image_saver import ImageSaver
 
 
 class Banner:
-    def __init__(self):
+    def __init__(self, project_path='project/'):
         # 初始化Chrome
         self.driver, self.server, self.proxy = ChromeDriver().get_driver()
-        f = open('banner.json', 'w+')
+        self.project_path = project_path
+        if not os.path.exists(project_path):
+            os.makedirs(project_path)
+        f = open(project_path + 'banner.json', 'w+')
         f.close()
 
     def get_limitation(self):
@@ -36,7 +40,7 @@ class Banner:
                         for i in info:
                             image_name = str(uuid.uuid1())
                             ImageSaver().save_image('https:' + i['img'], 'banner_image/', image_name + '.png')
-                        with open('banner.json', 'w+') as f:
+                        with open(self.project_path + 'banner.json', 'w+') as f:
                             f.write(json.dumps(json.dumps(info, ensure_ascii=False)))
                         print(_url, time_end - time_start)
                         return True
