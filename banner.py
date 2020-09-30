@@ -35,10 +35,11 @@ class Banner:
                         info = m['data']['info']
                         for i in info:
                             image_name = str(uuid.uuid1())
-                            ImageSaver().save_image('https:' + i['img'], 'banner_image' + image_name + '.png')
+                            ImageSaver().save_image('https:' + i['img'], 'banner_image/' + image_name + '.png')
                         with open('banner.json', 'w+') as f:
                             f.write(json.dumps(json.dumps(info, ensure_ascii=False)))
                         print(_url, time_end - time_start)
+                        break
 
         self.driver.quit()
         self.server.stop()
