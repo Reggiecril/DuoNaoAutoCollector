@@ -103,7 +103,7 @@ class MovieDetail:
         result["category"] = info['videoType']
         image_name = str(uuid.uuid1())
         result['image'] = image_name
-        ImageSaver().save_image('https:' + info['imgPath'], image_name)
+        ImageSaver().save_image('https:' + info['imgPath'], 'images/' + image_name + '.jpeg')
         return result
 
     def load_file(self):

@@ -1,5 +1,4 @@
 import os
-import time
 
 import requests
 
@@ -30,11 +29,4 @@ class ImageSaver:
     '''
 
     def image_path(self, image_name):
-        # 文件夹
-        file_dir = 'images/'
-        # 文件名
-        file_name = str(time.time())
-        # 文件后缀
-        suffix = '.jpeg'
-        return file_dir + image_name + suffix
-
+        return image_name
