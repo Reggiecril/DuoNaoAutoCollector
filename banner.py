@@ -39,7 +39,7 @@ class Banner:
                         with open('banner.json', 'w+') as f:
                             f.write(json.dumps(json.dumps(info, ensure_ascii=False)))
                         print(_url, time_end - time_start)
-                        break
+                        return True
 
         self.driver.quit()
         self.server.stop()
