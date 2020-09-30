@@ -4,14 +4,16 @@ import requests
 
 
 class ImageSaver:
-    def save_image(self, image_url, name):
+    def save_image(self, image_url, file_dir, name):
         if not image_url:
             return False
         size = 0
         number = 0
         while size == 0:
             img_file = requests.get(image_url)
-            file_path = self.image_path(name)
+            file_path = file_dir + name
+            if not os.path.exists(file_dir):
+                os.makedirs(file_dir)
             # 保存
             with open(file_path, 'wb') as f:
                 f.write(img_file.content)
