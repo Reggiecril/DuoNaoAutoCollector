@@ -8,10 +8,8 @@ import uuid
 import paramiko
 import requests
 
-from banner import Banner
 from chrome_driver import ChromeDriver
 from image_saver import ImageSaver
-from movie_list import MovieList
 
 
 class MovieDetail:
@@ -55,6 +53,11 @@ class MovieDetail:
         print('程序运行时间:', time.time() - time_start, '=' * 40)
         self.send_file(self.project_path)
 
+    def load_file(self):
+        url_list = list()
+        with open(self.project_path + "url.json", "r") as file:
+            url_list.extend(json.loads(file.read()))
+        return url_list
     def get_movie_detail(self, url, file_name='movie_detail.json'):
         self.driver.get('https://www.ifvod.tv/detaili?id=' + url)
         self.proxy.new_har('datayes', options={'captureHeaders': True, 'captureContent': True})
@@ -111,14 +114,6 @@ class MovieDetail:
         ImageSaver().save_image('https:' + info['imgPath'], self.project_path + 'images/', image_name + '.jpeg')
         return result
 
-    def load_file(self):
-        url_list = list()
-        with open(self.project_path + "url.json", "r") as file:
-            text_lines = file.readlines()
-            for line in text_lines:
-                url_list.extend(json.loads(line))
-        return url_list
-
     def save_as_json(self):
         l = list()
         with open(self.project_path + 'movie_detail.json', 'r') as file:
@@ -143,6 +138,7 @@ class MovieDetail:
         client.close()
 
 if __name__ == '__main__':
-    Banner().get_limitation()
-    MovieList().start_crawl()
-    MovieDetail().start_crawl()
+    # Banner().get_limitation()
+    # MovieList().start_crawl()
+    # MovieDetail().start_crawl()
+    print(MovieDetail().load_file())

@@ -7,6 +7,7 @@ import time
 import requests
 
 from chrome_driver import ChromeDriver
+from mysql import Database
 
 
 class MovieList:
@@ -34,6 +35,23 @@ class MovieList:
         self.driver.quit()
         self.server.stop()
         time.sleep(5)
+
+    def rewrite_result(self):
+        db_id = Database().get_all_id()
+        local_id = self.load_file
+        final_list = list()
+        for i in local_id:
+            if i not in db_id:
+                final_list.append(i)
+        return final_list
+
+    def load_file(self):
+        url_list = list()
+        with open(self.project_path + "url.json", "r") as file:
+            text_lines = file.readlines()
+            for line in text_lines:
+                url_list.extend(json.loads(line))
+        return url_list
 
     def get_movie_list(self, page):
         url = 'https://www.ifvod.tv/list?keyword=&star=&page={0}&pageSize=30&cid=0,1,3&year=-1&language=-1&region=-1&status=-1&orderBy=2&desc=true'.format(
