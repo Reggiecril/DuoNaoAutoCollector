@@ -35,15 +35,17 @@ class MovieList:
         self.driver.quit()
         self.server.stop()
         time.sleep(5)
+        self.rewrite_result()
 
     def rewrite_result(self):
         db_id = Database().get_all_id()
-        local_id = self.load_file
+        local_id = self.load_file()
         final_list = list()
         for i in local_id:
             if i not in db_id:
                 final_list.append(i)
-        return final_list
+        with open(self.project_path + "url.json", "w+") as file:
+            file.write(json.dumps(final_list, ensure_ascii=False))
 
     def load_file(self):
         url_list = list()
