@@ -128,7 +128,7 @@ class MovieDetail:
     def send_file(self, file_name):
         client = paramiko.SSHClient()  # 获取SSHClient实例
         client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        client.connect("122.51.155.8", username="root", password="123")  # 连接SSH服务端
+        client.connect("122.51.155.8", username="ubuntu", password="Cloud19961008")  # 连接SSH服务端
         transport = client.get_transport()  # 获取Transport实例
 
         # 创建sftp对象，SFTPClient是定义怎么传输文件、怎么交互文件
