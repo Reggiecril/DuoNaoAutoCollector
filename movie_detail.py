@@ -15,7 +15,7 @@ from movie_list import MovieList
 
 
 class MovieDetail:
-    def __init__(self, project_path='project/'):
+    def __init__(self, project_path='/root/project/'):
         # 初始化Chrome
         self.driver, self.server, self.proxy = ChromeDriver().get_driver()
         self.project_path = project_path
