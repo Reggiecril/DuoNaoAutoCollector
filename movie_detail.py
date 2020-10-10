@@ -134,7 +134,7 @@ class MovieDetail:
         # 创建sftp对象，SFTPClient是定义怎么传输文件、怎么交互文件
         sftp = paramiko.SFTPClient.from_transport(transport)
         # 将本地 api.py 上传至服务器 /www/test.py。文件上传并重命名为test.py
-        sftp.put(file_name, "/root/{}".format(file_name))
+        sftp.put(file_name, "~/{}".format(file_name))
 
         # 关闭连接
         client.close()
