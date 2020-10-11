@@ -22,7 +22,7 @@ class MovieDetail:
         if not os.path.exists(project_path):
             os.makedirs(project_path)
         # self.driver.set_page_load_timeout(10)
-        f = open('movie_detail.json', 'w+')
+        f = open(project_path + 'movie_detail.json', 'w+')
         f.close()
         file_dir = project_path + 'images/'
         if not os.path.exists(file_dir):
