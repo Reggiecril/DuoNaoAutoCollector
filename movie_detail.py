@@ -136,12 +136,12 @@ class MovieDetail:
 
         for root, dirs, files in os.walk(file_name):
             path = '~/' + root.replace(file_name, '') + '/'
-            if path is '~//':
+            if path == '~//':
                 path = '~/'
             print('当前目录路径', path)  # 当前目录路径
             print('当前路径下所有非目录子文件', files)  # 当前路径下所有非目录子文件
             for i in files:
-                sftp.put(file_name + i, path + i)
+                sftp.put(path + i, file_name + i)
         sftp.close()
         # 关闭连接
         client.close()

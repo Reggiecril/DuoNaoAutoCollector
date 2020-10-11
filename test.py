@@ -2,7 +2,7 @@ import os
 
 count = 0
 url = '/Users/xieyuncheng/Desktop/github/python/duoNaoAutoCollector/project/'
-path = '~/'
+path = '~/project'
 for root, dirs, files in os.walk(url):
     count += 1
     print(count)
