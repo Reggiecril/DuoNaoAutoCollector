@@ -2,12 +2,11 @@
 import json
 import math
 import os
-import time
-
 import requests
+import time
+from mysql import Database
 
 from chrome_driver import ChromeDriver
-from mysql import Database
 
 
 class MovieList:
@@ -38,12 +37,10 @@ class MovieList:
         self.rewrite_result()
 
     def rewrite_result(self):
-        db_id = Database().get_all_id()
         local_id = self.load_file()
         final_list = list()
         for i in local_id:
-            if i not in db_id:
-                final_list.append(i)
+            final_list.append(i)
         with open(self.project_path + "url.json", "w+") as file:
             file.write(json.dumps(final_list, ensure_ascii=False))
 
@@ -81,7 +78,6 @@ class MovieList:
                 break
             result = self.proxy.har
         return flag
-
 
     def get_limitation(self):
         url = 'https://www.ifvod.tv/list?keyword=&star=&page={0}&pageSize=30&cid=0,1,3&year=-1&language=-1&region=-1&status=-1&orderBy=2&desc=true'.format(
