@@ -1,12 +1,11 @@
 # coding:utf-8
 import json
 import os
+import paramiko
+import requests
 import shutil
 import time
 import uuid
-
-import paramiko
-import requests
 
 from banner import Banner
 from chrome_driver import ChromeDriver
@@ -111,6 +110,7 @@ class MovieDetail:
         result["director"] = info['vl']['director']
         result["interest"] = info['vl']['dd']
         result["category"] = info['videoType']
+        result["rate"] = info['pinfenRate']
         image_name = str(uuid.uuid1())
         result['image'] = image_name
         ImageSaver().save_image('https:' + info['imgPath'], self.project_path + 'images/', image_name + '.jpeg')
