@@ -2,9 +2,9 @@
 import json
 import math
 import os
-import requests
 import time
-from mysql import Database
+
+import requests
 
 from chrome_driver import ChromeDriver
 
