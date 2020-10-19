@@ -46,7 +46,7 @@ class Banner:
                             ImageSaver().save_image('https:' + i['img'], self.project_path + 'banner_image/',
                                                     image_name + '.png')
                             dic = dict()
-                            dic['id'] = str(i['id'])
+                            dic['id'] = i['url'].split('=')[1]
                             dic['title'] = i['title']
                             dic['image'] = image_name + '.png'
                             result.append(dic)
