@@ -38,7 +38,8 @@ class Banner:
                         r = requests.get(_url)
                         m = r.json()
                         info = m['data']['info']
-                        shutil.rmtree(self.project_path + 'banner_image')
+                        if os.path.exists(self.project_path + 'banner_image'):
+                            shutil.rmtree(self.project_path + 'banner_image')
                         result = list()
                         for i in info:
                             image_name = str(uuid.uuid1())
