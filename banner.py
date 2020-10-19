@@ -1,6 +1,7 @@
 # coding:utf-8
 import json
 import os
+import shutil
 import time
 import uuid
 
@@ -37,9 +38,11 @@ class Banner:
                         r = requests.get(_url)
                         m = r.json()
                         info = m['data']['info']
+                        shutil.rmtree(self.project_path + 'banner_image')
                         for i in info:
                             image_name = str(uuid.uuid1())
-                            ImageSaver().save_image('https:' + i['img'], 'banner_image/', image_name + '.png')
+                            ImageSaver().save_image('https:' + i['img'], self.project_path + 'banner_image/',
+                                                    image_name + '.png')
                         with open(self.project_path + 'banner.json', 'w+') as f:
                             f.write(json.dumps(info, ensure_ascii=False))
                         print(_url, time_end - time_start)
