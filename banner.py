@@ -41,7 +41,7 @@ class Banner:
                             image_name = str(uuid.uuid1())
                             ImageSaver().save_image('https:' + i['img'], 'banner_image/', image_name + '.png')
                         with open(self.project_path + 'banner.json', 'w+') as f:
-                            f.write(json.dumps(json.dumps(info, ensure_ascii=False)))
+                            f.write(json.dumps(info, ensure_ascii=False))
                         print(_url, time_end - time_start)
                         return True
 
