@@ -39,12 +39,18 @@ class Banner:
                         m = r.json()
                         info = m['data']['info']
                         shutil.rmtree(self.project_path + 'banner_image')
+                        result = list()
                         for i in info:
                             image_name = str(uuid.uuid1())
                             ImageSaver().save_image('https:' + i['img'], self.project_path + 'banner_image/',
                                                     image_name + '.png')
+                            dic = dict()
+                            dic['id'] = info['id']
+                            dic['title'] = dic['title']
+                            dic['image'] = image_name + '.png'
+                            result.append(dic)
                         with open(self.project_path + 'banner.json', 'w+') as f:
-                            f.write(json.dumps(info, ensure_ascii=False))
+                            f.write(json.dumps(result, ensure_ascii=False))
                         print(_url, time_end - time_start)
                         return True
 
