@@ -46,8 +46,8 @@ class Banner:
                             ImageSaver().save_image('https:' + i['img'], self.project_path + 'banner_image/',
                                                     image_name + '.png')
                             dic = dict()
-                            dic['id'] = str(info['id'])
-                            dic['title'] = dic['title']
+                            dic['id'] = str(i['id'])
+                            dic['title'] = i['title']
                             dic['image'] = image_name + '.png'
                             result.append(dic)
                         with open(self.project_path + 'banner.json', 'w+') as f:
